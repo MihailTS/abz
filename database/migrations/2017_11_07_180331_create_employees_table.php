@@ -19,7 +19,8 @@ class CreateEmployeesTable extends Migration
             $table->string('position');
             $table->date('employmentDate');
             $table->decimal('salary',8,2);
-            $table->unsignedInteger('head')->nullable();//президент компании может не иметь начальника
+            $table->unsignedInteger('head_id')->nullable();//президент компании может не иметь начальника
+            $table->foreign('head_id')->references('id')->on('employees')->onDelete('SET NULL');
             $table->timestamps();
         });
     }
@@ -31,6 +32,10 @@ class CreateEmployeesTable extends Migration
      */
     public function down()
     {
+        /*Schema::table("employees",
+        function($table) {
+            $table->dropForeign('head_id');
+        });*/
         Schema::dropIfExists('employees');
     }
 }

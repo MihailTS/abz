@@ -30,7 +30,7 @@ class EmployeesTableSeeder extends Seeder
                     'employmentDate' => $faker->dateTimeBetween($startDate = '-10 years', $endDate = 'now'),
                     'salary' => $faker->randomFloat(2, 1000, 1000000),
                     'position' => $positions[$i],
-                    'head' => ($i == 1) ? 1 : random_int(($i - 2) * $emplNumberInPosition + 2, ($i - 1) * $emplNumberInPosition + 1),
+                    'head_id' => ($i == 1) ? 1 : random_int(($i - 2) * $emplNumberInPosition + 2, ($i - 1) * $emplNumberInPosition + 1),
                     //начальник привязывается к случайному элементу из предыдущей должности.
                     //у первых двух должностей начальник известен сразу(null для директора и 1 для руководителя отдела)
                 ]);

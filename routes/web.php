@@ -1,5 +1,5 @@
 <?php
-
+use \App\Employee;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -10,7 +10,8 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Route::get('/', function () {
+    //$empl=Employee::find(1);
+    //$empl->delete();
     return view('welcome');
 });
