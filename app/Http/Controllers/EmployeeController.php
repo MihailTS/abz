@@ -7,8 +7,10 @@ use App\Employee;
 
 class EmployeeController extends Controller
 {
+    const DEFAULT_LEVELS=2;
     public function index(){
-        $test=1;
-        return view('employees',["test"=>$test]);
+        $root=Employee::with('children')->whereNull('head_id')->get();
+        //$secondLevel=$root[0]->children;
+        return view('employees',["root"=>$root]);
     }
 }

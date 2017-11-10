@@ -22,7 +22,8 @@ class EmployeesTableSeeder extends Seeder
             'salary' => $faker->randomFloat(2, 1000, 1000000),
             'position' => $positions[0],
         ]);
-        $emplNumberInPosition = 10000;//Количество сотрудников с одной должностью
+        $emplNumberInPosition = 5;//Количество сотрудников с одной должностью
+        $emplTotalCount=1;//общее кол-во сотрудников
         for ($i = 1; $i < count($positions); $i++) {
             for ($j = 0; $j < $emplNumberInPosition; $j++) {
                 Employee::create([
@@ -30,11 +31,13 @@ class EmployeesTableSeeder extends Seeder
                     'employmentDate' => $faker->dateTimeBetween($startDate = '-10 years', $endDate = 'now'),
                     'salary' => $faker->randomFloat(2, 1000, 1000000),
                     'position' => $positions[$i],
-                    'head_id' => ($i == 1) ? 1 : random_int(($i - 2) * $emplNumberInPosition + 2, ($i - 1) * $emplNumberInPosition + 1),
+                    'head_id' => ($i == 1) ? 1 : random_int($emplTotalCount-$emplNumberInPosition/10+1, $emplTotalCount),
                     //начальник привязывается к случайному элементу из предыдущей должности.
                     //у первых двух должностей начальник известен сразу(null для директора и 1 для руководителя отдела)
                 ]);
             }
+            $emplTotalCount+=$emplNumberInPosition;
+            $emplNumberInPosition*=10; //сотрудников с более низкой должностью на порядок больше
         }
     }
 }
