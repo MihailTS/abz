@@ -10,8 +10,5 @@ use \App\Employee;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/', function () {
-    //$empl=Employee::find(1);
-    //$empl->delete();
-    return view('welcome');
-});
+Route::get('/', 'EmployeeController@index');
+Route::get('/employee/children/{id}', 'EmployeeController@getChildren')->where('id', '[0-9]+');

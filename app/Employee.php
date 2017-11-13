@@ -33,6 +33,12 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Employee extends Model
 {
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'employmentDate'
+    ];
+    protected $dateFormat = 'd.m.Y';
     public static function boot() {
         parent::boot();
 
@@ -42,6 +48,10 @@ class Employee extends Model
         });
     }
 
+    public function getSalaryAttribute($value)
+    {
+        return number_format($value,'2','.', ' ');
+    }
 
     public function head()
     {
@@ -49,6 +59,6 @@ class Employee extends Model
     }
     public function children()
     {
-        return $this->hasMany(Employee::class,'head_id');
+        return $this->hasMany(Employee::class,'head_id')->select(array('id','name','position','head_id','employmentDate','salary'));
     }
 }

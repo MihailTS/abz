@@ -15,8 +15,15 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example', require('./components/Example.vue'));
-
+//Vue.component('example', require('./components/Example.vue'));
+//Vue.component('empl-tree', require('./components/Employees_tree.vue'));
+const axios = require('axios');
+Vue.prototype.$http = axios;
+Vue.component('empl-tree', require('./components/Employees_tree.vue'));
+console.log(tree);
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+    data: {
+        treeData: tree
+    }
 });

@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Employees</title>
     <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
-    <script src="{{ mix('/js/app.js') }}"></script>
     <!-- Styles -->
     <style>
 
@@ -26,37 +26,50 @@
             </div>
             <div class="collapse navbar-collapse" id="navbar-main">
                 <ul class="head-menu__list nav navbar-nav">
-                    {{--@foreach($menuItems as $menuIndex=>$menuItem)
-                        <li style="background-position: <?echo $menuOffsetY;$menuOffsetY-=141?>px 0" class="head-menu__list-item{{($menuItem[2])?" head-menu__list-item_special":""}}{{(isset($selectedIndex) && $menuIndex==$selectedIndex)?" head-menu__list-item_selected":""}}"><a href="{{$menuItem[1]}}">{{$menuItem[0]}}</a></li>
-                    @endforeach--}}
+                    <li class="head-menu__list-item {{(isset($selectedIndex) && $menuIndex==$selectedIndex)?"head-menu__list-item_selected":""}}"><a href="/">Главная</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 </header>
+<script>
+
+
+</script>
+<style>.employee__node-open_no-child{
+        visibility: hidden;
+    }
+    .employee__node-position{
+        font-style:italic;
+        font-size:0.85em;
+    }
+    .employees__head-item{
+        font-weight: bold;
+        font-size:1.1em;
+    }
+    .employees__head{
+        border-bottom:1px solid #555555;
+        margin-bottom:20px;
+    }
+    .employee__node-date,.employee__node-salary{
+        font-family: "Inconsolata", "Fira Mono", "Source Code Pro", Monaco, Consolas, "Lucida Console", monospace;
+    }
+</style>
 <div class="container">
-    <div class="employees row">
-        @foreach($root as $parent_employee)
-            <div class="employee">
-                <div class="employee-content row">
-                    <div class="employee__node-open col-md-1">+</div>
-                    <div class="employee__name col-md-5">{{$parent_employee->name}}</div>
-                    <div class="employee__position col-md-3">{{$parent_employee->position}}</div>
-                </div>
-                <div class="employee-children">
-                    @foreach($parent_employee->children as $employee)
-                        <div class="employee">
-                            <div class="employee-content row">
-                                <div class="employee__node-open col-md-1">+</div>
-                                <div class="employee__name col-md-5">{{$employee->name}}</div>
-                                <div class="employee__position col-md-3">{{$employee->position}}</div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        @endforeach
+    <div class="employees__head row" >
+        <div class="employees__head-item col-md-offset-6 col-md-3">Дата приема на работу</div>
+        <div class="employees__head-item col-md-3">Размер зарплаты</div>
+    </div>
+    <div id='app'>
+        <empl-tree
+                v-for="model in treeData"
+                :model="model"
+                :key="model.id"
+        ></empl-tree>
     </div>
 </div>
+<script>let tree = {!!$jsonTree!!};
+</script>
+<script src="{{ mix('/js/app.js') }}"></script>
 </body>
 </html>
