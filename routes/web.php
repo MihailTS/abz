@@ -11,4 +11,4 @@ use \App\Employee;
 |
 */
 Route::get('/', 'EmployeeController@index');
-Route::get('/employee/children/{id}', 'EmployeeController@getChildren')->where('id', '[0-9]+');
+Route::get('/employee/children/{id}', 'EmployeeController@getChildren')->where('id', '[0-9]+')->middleware('ajaxOnly');

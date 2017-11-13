@@ -1,6 +1,6 @@
 <template>
     <div class="employees">
-        <div class="employee">
+        <div class="employee"  draggable='true' @dragover.prevent  @drop='dragEnd'>
             <div class="employee-data row"
                  :class="{bold: hasChildren}"
                  @click="openNode">
@@ -69,6 +69,10 @@
                     .catch((error) => {
                         console.log(error);
                     });
+            },
+            dragEnd(e){
+                console.log(this.model);
+                console.log(e);
             }
         }
     }
