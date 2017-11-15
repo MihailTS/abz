@@ -53,6 +53,10 @@ class Employee extends Model
         return number_format($value,'2','.', ' ');
     }
 
+    public function getEmploymentDateAttribute($value) {
+        return \Carbon\Carbon::parse($value)->format('d.m.Y');
+    }
+
     public function head()
     {
         return $this->belongsTo(Employee::class);

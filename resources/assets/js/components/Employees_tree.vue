@@ -1,6 +1,6 @@
 <template>
     <div class="employees">
-        <div class="employee"  draggable='true' @dragover.prevent  @drop='dragEnd'>
+        <div class="employee">
             <div class="employee-data row"
                  :class="{bold: hasChildren}"
                  @click="openNode">
@@ -17,7 +17,8 @@
                         class="item"
                         v-for="model in model.children"
                         :model="model"
-                        :key="model.id">
+                        :key="model.id"
+                >
                 </empl-tree>
             </div>
         </div>
@@ -25,6 +26,8 @@
 </template>
 
 <script>
+
+    let fromData = '';
     export default {
         props: {model: Object},
         data() {
@@ -70,10 +73,26 @@
                         console.log(error);
                     });
             },
-            dragEnd(e){
-                console.log(this.model);
-                console.log(e);
-            }
         }
     }
 </script>
+<style>
+    .employee__node-open_no-child{
+        visibility: hidden;
+    }
+    .employee__node-position{
+        font-style:italic;
+        font-size:0.85em;
+    }
+    .employees__head-item{
+        font-weight: bold;
+        font-size:1.1em;
+    }
+    .employees__head{
+        border-bottom:1px solid #555555;
+        margin-bottom:20px;
+    }
+    .employee__node-date,.employee__node-salary{
+        font-family: "Inconsolata", "Fira Mono", "Source Code Pro", Monaco, Consolas, "Lucida Console", monospace;
+    }
+</style>

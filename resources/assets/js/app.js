@@ -20,7 +20,6 @@ window.Vue = require('vue');
 const axios = require('axios');
 Vue.prototype.$http = axios;
 Vue.component('empl-tree', require('./components/Employees_tree.vue'));
-console.log(tree);
 const app = new Vue({
     el: '#app',
     data: {

@@ -34,20 +34,23 @@
 </header>
 
 <div class="container">
-    <div class="employees__head row" >
-        <div class="employees__head-item col-md-offset-6 col-md-3">Дата приема на работу</div>
-        <div class="employees__head-item col-md-3">Размер зарплаты</div>
+    <div class="employees-list__head row" >
+        <div class="empl-list__head-item col-md-3">ФИО</div>
+        <div class="empl-list__head-item col-md-3">Должность</div>
+        <div class="empl-list__head-item col-md-3">Дата приема на работу</div>
+        <div class="empl-list__head-item col-md-3">Размер зарплаты</div>
     </div>
-    <div id='app'>
-        <empl-tree
-                v-for="model in treeData"
-                :model="model"
-                :key="model.id"
-        ></empl-tree>
+    <div class="empl-list-item row">
+        @foreach($employeesData as $empl)
+            <div class="empl-list-item__name col-md-3">{{$empl->name}}</div>
+            <div class="empl-list-item__position col-md-3">{{$empl->position}}</div>
+            <div class="empl-list-item__date col-md-3">{{$empl->employmentDate}}</div>
+            <div class="empl-list-item__salary col-md-3">{{$empl->salary}}</div>
+        @endforeach
     </div>
+    {{ $employeesData->links() }}
+
 </div>
-<script>let tree = {!!$jsonTree!!};
-</script>
 <script src="{{ mix('/js/app.js') }}"></script>
 </body>
 </html>
