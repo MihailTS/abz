@@ -1,6 +1,8 @@
 <template>
     <div class="employees">
-        <div class="employee">
+        <div class="employee"
+             @dragover.prevent @drop="drop" @dragstart="dragstart"
+            draggable="true">
             <div class="employee-data row"
                  :class="{bold: hasChildren}"
                  @click="openNode">
@@ -13,13 +15,13 @@
                 <div class="employee__node-salary col-md-3">{{ model.salary}}</div>
             </div>
             <div style="padding-left:50px" v-show="open" v-if="hasChildren">
-                <empl-tree
+                <item
                         class="item"
                         v-for="model in model.children"
-                        :model="model"
+                        :tree_data="model"
                         :key="model.id"
                 >
-                </empl-tree>
+                </item>
             </div>
         </div>
     </div>
@@ -27,19 +29,19 @@
 
 <script>
 
-    let fromData = '';
     export default {
-        props: {model: Object},
+        props: {tree_data: Object},
         data() {
             return {
+                model:this.tree_data,
                 open: true,
-                loaded:false
+                loaded:false,
             }
         },
         computed: {
             hasChildren: function () {
                 return this.model.children &&
-                    this.model.children.length
+                        this.model.children.length
             },
             alreadyLoaded: function () {//были ли уже подгружены подчиненные
                 return this.hasChildren||this.loaded;
@@ -52,6 +54,10 @@
                 }
             },
         },
+
+        beforeCreate() {
+            this.$options.components.item = require('./Employees_tree')
+        },
         methods: {
             openNode() {
                 if (this.hasChildren) {
@@ -63,36 +69,34 @@
             },
             loadChildren() {
                 this.$http.get('/employee/children/'+this.model.id)
-                    .then((response) => {
-                        Vue.set(this.model, 'children', []);
-                        this.model.children.push(...response.data);
-                        this.loaded=true;
-                        this.open=true;
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
+                        .then((response) => {
+                            Vue.set(this.model, 'children', []);
+                            this.model.children.push(...response.data);
+                            this.loaded=true;
+                            this.open=true;
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
             },
+            dragstart(e){
+                e.stopPropagation();
+                e.dataTransfer.effectAllowed = 'all';
+                e.dataTransfer.dropEffect = 'copy';
+                e.dataTransfer.setData('data',JSON.stringify({
+                    id:this.model.id,
+                    name:this.model.name,
+                    position:this.model.position,
+                    employmentDate:this.model.employmentDate,
+                    salary:this.model.salary,
+                }));
+                console.log(e.dataTransfer.getData('data'));
+
+            },
+            drop(e){
+                e.stopPropagation();
+               console.log(this.model.name);
+            }
         }
     }
 </script>
-<style>
-    .employee__node-open_no-child{
-        visibility: hidden;
-    }
-    .employee__node-position{
-        font-style:italic;
-        font-size:0.85em;
-    }
-    .employees__head-item{
-        font-weight: bold;
-        font-size:1.1em;
-    }
-    .employees__head{
-        border-bottom:1px solid #555555;
-        margin-bottom:20px;
-    }
-    .employee__node-date,.employee__node-salary{
-        font-family: "Inconsolata", "Fira Mono", "Source Code Pro", Monaco, Consolas, "Lucida Console", monospace;
-    }
-</style>

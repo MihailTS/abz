@@ -1,0 +1,30 @@
+.employee__node-open_no-child{
+  visibility: hidden;
+}
+.employee__node-position{
+  font-style:italic;
+  font-size:0.85em;
+}
+.employees__head-item{
+  font-weight: bold;
+  font-size:1.1em;
+}
+.employees__head{
+  border-bottom:1px solid #555555;
+  margin-bottom:20px;
+}
+.employee__node-date,.employee__node-salary{
+  font-family: "Inconsolata", "Fira Mono", "Source Code Pro", Monaco, Consolas, "Lucida Console", monospace;
+}
+.employees__head-item_clickable{
+  cursor: pointer;
+  height:30px;
+}
+.employees__head-item_clickable:hover{
+  font-size:1.15em;
+  -webkit-transition: 1s;
+  -moz-transition: 1s;
+  -ms-transition: 1s;
+  -o-transition: 1s;
+  transition: 1s;
+}
