@@ -33,12 +33,21 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Employee extends Model
 {
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'employmentDate'
-    ];
-    protected $dateFormat = 'd.m.Y';
+    public function changeHead($head_id){
+        if($head=Employee::find($head_id)){
+            $curHead=$head;
+            while($curHead=$curHead->head()->first()){
+                if($curHead->id==$this->id){
+                    throw new Exception('parent');
+                }
+            }
+            $this->head_id=$head_id;
+            $this->save();
+            return true;
+        }else{
+            return false;
+        }
+    }
     public static function boot() {
         parent::boot();
 
@@ -56,7 +65,15 @@ class Employee extends Model
     public function getEmploymentDateAttribute($value) {
         return \Carbon\Carbon::parse($value)->format('d.m.Y');
     }
+    public function getCreatedAtAttribute($date)
+    {
+        return \Carbon\Carbon::createFromFormat('d.m.Y', $date);
+    }
 
+    public function getUpdatedAtAttribute($date)
+    {
+        return \Carbon\Carbon::createFromFormat('d.m.Y', $date);
+    }
     public function head()
     {
         return $this->belongsTo(Employee::class);

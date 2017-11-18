@@ -16,5 +16,4 @@
     </div>
     @endforeach
     {{ $links }}
-
 @endsection

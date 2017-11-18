@@ -1,5 +1,9 @@
 <template>
     <div class="employees">
+        <div v-if="parent_component" class="employees__head row" >
+            <div class="employees__head-item col-md-offset-6 col-md-3">Дата приема на работу</div>
+            <div class="employees__head-item col-md-3">Размер зарплаты</div>
+        </div>
         <div class="employee"
              @dragover.prevent @drop="drop" @dragstart="dragstart"
             draggable="true">
@@ -24,6 +28,23 @@
                 </item>
             </div>
         </div>
+        <div v-if="parent_component" class="change-head__modal modal fade" id="change-head__modal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Изменение начальника</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Вы действительно хотите изменить начальника у сотрудника «<span class="change-head__text change-head__employee"></span>» на «<span class="change-head__text change-head__target-head"></span>»?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success change-head__accept-button" @click="changeHead">Да</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Нет</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -36,6 +57,7 @@
                 model:this.tree_data,
                 open: true,
                 loaded:false,
+                parent_component:(this._uid==1),
             }
         },
         computed: {
@@ -79,23 +101,49 @@
                             console.log(error);
                         });
             },
+            changeHead(){
+                if(Vue.$employeeToChangeHead && Vue.$headToChangeHead) {
+                    console.log(Vue.$employeeToChangeHead);
+                    this.$http.get('/employee/change_head/' + Vue.$employeeToChangeHead + "/" + Vue.$headToChangeHead)
+                        .then((response) => {
+                        console.log(response.data);
+                            location.reload();
+                        })
+                        .catch((error) => {
+                            if(error.response && error.response.status===500){
+                                alert("Кольцевая зависимость! Невозможно выбрать начальником сотрудника, подчиненного текущему пользователю!");
+                            }else{
+                                alert("Ошибка при изменении начальника. Попробуйте позже");
+                                console.log(error);
+                            }
+                        });
+                }
+                $("#change-head__modal").modal('hide');
+            },
             dragstart(e){
                 e.stopPropagation();
                 e.dataTransfer.effectAllowed = 'all';
                 e.dataTransfer.dropEffect = 'copy';
-                e.dataTransfer.setData('data',JSON.stringify({
+                e.dataTransfer.setData('employee',JSON.stringify({
                     id:this.model.id,
                     name:this.model.name,
                     position:this.model.position,
                     employmentDate:this.model.employmentDate,
                     salary:this.model.salary,
                 }));
-                console.log(e.dataTransfer.getData('data'));
 
             },
             drop(e){
                 e.stopPropagation();
-               console.log(this.model.name);
+                let currentEmployee=JSON.parse(e.dataTransfer.getData('employee'));
+                if(currentEmployee && currentEmployee.id!==this.model.id){
+                    Vue.$employeeToChangeHead=currentEmployee.id;
+                    Vue.$headToChangeHead=this.model.id;
+                    $(".change-head__employee").text(currentEmployee.name);
+                    $(".change-head__target-head").text(this.model.name);
+                    $("#change-head__modal").modal('show');
+                }
+
             }
         }
     }

@@ -30,7 +30,7 @@ class EmployeeController extends Controller
         }
         $employeesData=$employeesData->orderBy($sortField,$sortOrder);
         $employeesData=$employeesData->paginate(40);
-
+//dump($employeesData);
         $links = $employeesData->appends($sortLinks)->links();
         return view('employeesList',["emplList"=>$employeesData,"links"=>$links]);
     }
@@ -38,9 +38,22 @@ class EmployeeController extends Controller
     public function getSorted(Request $request){
         //if($request->get('sort'))
     }
-    public function getChildren($empl_id){
-        $childrenEmployees=Employee::find($empl_id)->children()->with('children')->get()->toJson();
+    public function getChildren($id){
+        $childrenEmployees=Employee::find($id)->children()->with('children')->get()->toJson();
         return $childrenEmployees;
+    }
+    public function changeHead($id,$head){
+        $employee=Employee::find($id);
+        if(!empty($employee)){
+            try{
+                if(!($employee->changeHead($head))){
+                    return response('no employee', 500);
+                }
+            }
+            catch(\Exception $e){
+                return response('parent', 500);
+            }
+        }
     }
 
 }
