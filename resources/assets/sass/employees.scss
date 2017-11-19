@@ -20,6 +20,12 @@
   cursor: pointer;
   height:30px;
 }
+.employees__head-item_sort-desc:after{
+  content:"▲";
+}
+.employees__head-item_sort-asc:after{
+  content:"▼";
+}
 .employees__head-item_clickable:hover{
   font-size:1.15em;
   -webkit-transition: 1s;

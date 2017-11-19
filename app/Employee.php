@@ -62,24 +62,12 @@ class Employee extends Model
         return number_format($value,'2','.', ' ');
     }
 
-    public function getEmploymentDateAttribute($value) {
-        return \Carbon\Carbon::parse($value)->format('d.m.Y');
-    }
-    public function getCreatedAtAttribute($date)
-    {
-        return \Carbon\Carbon::createFromFormat('d.m.Y', $date);
-    }
-
-    public function getUpdatedAtAttribute($date)
-    {
-        return \Carbon\Carbon::createFromFormat('d.m.Y', $date);
-    }
     public function head()
     {
         return $this->belongsTo(Employee::class);
     }
     public function children()
     {
-        return $this->hasMany(Employee::class,'head_id')->select(array('id','name','position','head_id','employmentDate','salary'));
+        return $this->hasMany(Employee::class,'head_id')->select(['id','name','position','head_id','employmentDate','salary']);
     }
 }

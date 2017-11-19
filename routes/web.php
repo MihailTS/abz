@@ -13,7 +13,7 @@ use \App\Employee;
 Route::get('/', 'EmployeeController@index');
 Route::get('/employee/children/{id}', 'EmployeeController@getChildren')->where('id', '[0-9]+')->middleware('ajaxOnly');
 Route::get('/employee/change_head/{id}/{head}', 'EmployeeController@changeHead')->where('id', '[0-9]+')->middleware('ajaxOnly');
-Route::get('/employees/', 'EmployeeController@getSorted')->middleware('ajaxOnly');
+Route::get('/list/_sort', 'EmployeeController@getSortedAjax');
 Route::get('/list/', 'EmployeeController@emplList');
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
