@@ -19,6 +19,10 @@
 .employees__head-item_clickable{
   cursor: pointer;
   height:30px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .employees__head-item_sort-desc:after{
   content:"▲";

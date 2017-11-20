@@ -21,7 +21,14 @@ class EmployeeController extends Controller
         $fields=['id','name','position','employmentDate','salary'];
         $employeesData=Employee::select($fields);
         $sortLinks=[];
-
+        $searchQuery=$request->q;
+        if(!empty($searchQuery)){
+            $employeesData=$employeesData->where(
+                'name', 'LIKE', '%'.$searchQuery.'%')->orWhere(
+                'position', 'LIKE', '%' . $searchQuery . '%')->orWhere(
+                'employmentDate', 'LIKE', '%' . $searchQuery . '%')->orWhere(
+                'salary', 'LIKE', '%' . $searchQuery . '%');
+        }
         if(!empty($request->sort) && in_array($request->sort,$fields)){
             $sortField=$request->sort;
             $sortLinks['sort']=$sortField;
@@ -35,7 +42,7 @@ class EmployeeController extends Controller
         $sortLinks['order']=$sortOrder;
         $employeesData=$employeesData->orderBy($sortField,$sortOrder);
         $employeesData=$employeesData->paginate($this::PAGINATION_ON_PAGE);
-        return view('employeesList',["emplList"=>$employeesData,"sortLinks"=>$sortLinks]);
+        return view('employeesList',["emplList"=>$employeesData,"sortLinks"=>$sortLinks,"searchQuery"=>$searchQuery]);
     }
 
     public function getSortedAjax(Request $request){
@@ -46,15 +53,38 @@ class EmployeeController extends Controller
             $page=1;
         }
         $fields=['id','name','position','employmentDate','salary'];
+        $employeesData=Employee::select($fields);
+        $searchQuery=$request->q;
+        if(!empty($searchQuery)){
+            $employeesData=$employeesData->where(
+                'name', 'LIKE', '%'.$searchQuery.'%')->orWhere(
+                'position', 'LIKE', '%' . $searchQuery . '%')->orWhere(
+                'employmentDate', 'LIKE', '%' . $searchQuery . '%')->orWhere(
+                'salary', 'LIKE', '%' . $searchQuery . '%');
+        }
         if(!empty($request->sort) && in_array($request->sort,$fields)){
             $sortField=$request->sort;
         }
         if(!empty($request->order) && ($request->order=='asc' || $request->order=='desc')){
             $sortOrder=$request->order;
         }
-        $employeesData=Employee::select($fields)->skip($page*$this::PAGINATION_ON_PAGE-$this::PAGINATION_ON_PAGE)
-            ->take($this::PAGINATION_ON_PAGE)->orderBy($sortField,$sortOrder)->get()->toJson();
-        return $employeesData;
+        $employeesData=$employeesData->orderBy($sortField,$sortOrder);
+        $employeesCount=$employeesData->count();
+        if($employeesCount>0){
+            $lastPage=floor($employeesCount/$this::PAGINATION_ON_PAGE);
+            if($employeesCount%$this::PAGINATION_ON_PAGE>0){
+                $lastPage++;
+            }
+            $employeesData=$employeesData->skip($page*$this::PAGINATION_ON_PAGE-$this::PAGINATION_ON_PAGE)
+                ->take($this::PAGINATION_ON_PAGE)->get();
+        }else{
+            $lastPage=0;
+        }
+        $result['items']=$employeesData;
+        $result['pagination']['lastPage']=$lastPage;
+        $result['pagination']['currentPage']=(int)$page;
+        $result['search']=$searchQuery;
+        return json_encode($result);
 
     }
     public function getChildren($id){
