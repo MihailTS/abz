@@ -33,20 +33,27 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Employee extends Model
 {
+    protected $fillable = ['name', 'employmentDate','salary','position','head_id'];
+    public function isSupreme($empl){//возвращает true - если $empl является непосредственным или косвенным начальником
+        $curHead=$empl;
+        while($curHead=$curHead->head()->first()){
+            if($curHead->id==$this->id){
+                return true;
+            }
+        }
+        return false;
+    }
     public function changeHead($head_id){
         if($head=Employee::find($head_id)){
-            $curHead=$head;
-            while($curHead=$curHead->head()->first()){
-                if($curHead->id==$this->id){
-                    throw new Exception('parent');
-                }
+            if($this->isSupreme($head)){
+                throw new Exception('parent');
+            }else{
+                $this->head_id=$head_id;
+                $this->save();
+                return true;
             }
-            $this->head_id=$head_id;
-            $this->save();
-            return true;
-        }else{
-            return false;
         }
+        return false;
     }
     public static function boot() {
         parent::boot();

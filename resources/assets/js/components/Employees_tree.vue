@@ -10,13 +10,13 @@
             <div class="employee-data row"
                  :class="{bold: hasChildren}"
                  @click="openNode">
-                <span class="employee__node-open col-md-1 fa" :class="[{'employee__node-open_no-child':!hasChildren&&alreadyLoaded},openIconClasses]"></span>
-                <div class="employee__node-info col-md-5">
+                <span class="employee__node-open col-md-1 col-sm-1 fa" :class="[{'employee__node-open_no-child':!hasChildren&&alreadyLoaded},openIconClasses]"></span>
+                <div class="employee__node-info col-md-5 col-sm-5">
                     <div class="employee__node-name">{{ model.name }}</div>
                     <div class="employee__node-position">{{ model.position}}</div>
                 </div>
-                <div class="employee__node-date col-md-3">{{ model.employmentDate}}</div>
-                <div class="employee__node-salary col-md-3">{{ model.salary}}</div>
+                <div class="employee__node-date number-data col-md-3 col-sm-3">{{ model.employmentDate}}</div>
+                <div class="employee__node-salary number-data col-md-3 col-sm-3">{{ model.salary}}</div>
             </div>
             <div style="padding-left:50px" v-show="open" v-if="hasChildren">
                 <item

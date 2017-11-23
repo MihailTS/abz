@@ -68,7 +68,7 @@
                         @endguest
                             <li><a href="/">Дерево</a></li>
                             <li><a href="/list">Список</a></li>
-                            <li><a href="/home">Раздел для авторизованных</a></li>
+                            <li><a href="/employees/">Раздел для авторизованных</a></li>
                     </ul>
                 </div>
             </div>

@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+    @if(Session::has('success_msg'))
+        <div class="alert alert-success">{{ Session::get('success_msg') }}</div>
+    @endif
     <div class="row">
         <div class="col-md-6">
             <div id="employees__search">
@@ -15,20 +18,24 @@
             </div>
         </div>
     </div>
+    <br>
+    <div class="employees__add">
+        <a class="btn btn-success" href="{{route('employees.create')}}">Добавить сотрудника</a>
+    </div>
     <hr>
     <div class="employees__head row" >
-        <div data-sort="name" class="employees__head-item employees__head-item_clickable col-md-3 @if($sortLinks['sort']=="name"){{($sortLinks['order']=="desc")?"employees__head-item_sort-desc":"employees__head-item_sort-asc"}}@endif">ФИО</div>
-        <div data-sort="position" class="employees__head-item employees__head-item_clickable col-md-3 @if($sortLinks['sort']=="position"){{($sortLinks['order']=="desc")?"employees__head-item_sort-desc":"employees__head-item_sort-asc"}}@endif">Должность</div>
-        <div data-sort="employmentDate" class="employees__head-item employees__head-item_clickable col-md-3 @if($sortLinks['sort']=="employmentDate"){{($sortLinks['order']=="desc")?"employees__head-item_sort-desc":"employees__head-item_sort-asc"}}@endif">Дата приема на работу</div>
-        <div data-sort="salary" class="employees__head-item employees__head-item_clickable col-md-3 @if($sortLinks['sort']=="salary"){{($sortLinks['order']=="desc")?"employees__head-item_sort-desc":"employees__head-item_sort-asc"}}@endif">Размер зарплаты</div>
+        <div data-sort="name" class="employees__head-item employees__head-item_clickable col-md-3 col-sm-3 @if($sortLinks['sort']=="name"){{($sortLinks['order']=="desc")?"employees__head-item_sort-desc":"employees__head-item_sort-asc"}}@endif">ФИО</div>
+        <div data-sort="position" class="employees__head-item employees__head-item_clickable col-md-3 col-sm-3 @if($sortLinks['sort']=="position"){{($sortLinks['order']=="desc")?"employees__head-item_sort-desc":"employees__head-item_sort-asc"}}@endif">Должность</div>
+        <div data-sort="employmentDate" class="employees__head-item employees__head-item_clickable col-md-2 col-sm-2 @if($sortLinks['sort']=="employmentDate"){{($sortLinks['order']=="desc")?"employees__head-item_sort-desc":"employees__head-item_sort-asc"}}@endif">Дата приема на работу</div>
+        <div data-sort="salary" class="employees__head-item employees__head-item_clickable col-md-2 col-sm-2 @if($sortLinks['sort']=="salary"){{($sortLinks['order']=="desc")?"employees__head-item_sort-desc":"employees__head-item_sort-asc"}}@endif">Размер зарплаты</div>
         </div>
     <div class="employees">
         @forelse($emplList as $empl)
         <div class="employee row">
-                <div class="employee__node-name col-md-3">{{$empl->name}}</div>
-                <div class="employee__node-position col-md-3">{{$empl->position}}</div>
-                <div class="employee__node-date col-md-3">{{$empl->employmentDate}}</div>
-                <div class="employee__node-salary col-md-3">{{$empl->salary}}</div>
+                <a href="{{route('employees.show',$empl->id)}}"><div class="employee__node-name col-md-3 col-sm-3">{{$empl->name}}</div></a>
+                <div class="employee__node-position col-md-3 col-sm-3">{{$empl->position}}</div>
+                <div class="employee__node-date number-data col-md-2 col-sm-2">{{$empl->employmentDate}}</div>
+                <div class="employee__node-salary number-data col-md-2 col-sm-2">{{$empl->salary}}</div>
         </div>
         @empty
                 <div>По данному запросу сотрудники не найдены</div>
@@ -129,10 +136,11 @@
             let employeesHtml="";
             if(typeof data.forEach === "function"){
                 data.forEach((i)=>{
-                    employeesHtml+="<div class='employee row'><div class='employee__node-name col-md-3'>"+i.name+"</div>" +
-                        "<div class='employee__node-position col-md-3'>"+i.position+"</div>" +
-                        "<div class='employee__node-date col-md-3'>"+i.employmentDate+"</div>" +
-                        "<div class='employee__node-salary col-md-3'>"+i.salary+"</div></div>";
+                    employeesHtml+="<div class='employee row'><a href='{{route('employees.index')}}/"+i.id+"'>" +
+                        "<div class='employee__node-name col-md-3 col-sm-3'>"+i.name+"</div></a>" +
+                        "<div class='employee__node-position col-md-3 col-sm-3'>"+i.position+"</div>" +
+                        "<div class='employee__node-date number-data col-md-2 col-sm-2'>"+i.employmentDate+"</div>" +
+                        "<div class='employee__node-salary number-data col-md-2 col-sm-2'>"+i.salary+"</div></div>";
                 });
             }
             $(".employees").html(employeesHtml);
@@ -189,19 +197,18 @@
             let sort=emplPagination.sort;
             let order=emplPagination.order;
             let search=$(".employees__search-query").val();
-            if(search){
-                $.get({
-                    url:"/list/_sort",
-                    data:{page:page,sort:sort,order:order,q:search},
-                    dataType:"json",
-                    success:(data)=>{
-                        fillEmployeesList(data.items);
-                        emplPagination=new CustomPagination(data.pagination.currentPage,data.pagination.lastPage,
-                            sort,order,search);
-                        emplPagination.render(paginationBlock);
-                    }
-                });
-            }
+
+            $.get({
+                url:"/list/_sort",
+                data:{page:page,sort:sort,order:order,q:search},
+                dataType:"json",
+                success:(data)=>{
+                    fillEmployeesList(data.items);
+                    emplPagination=new CustomPagination(data.pagination.currentPage,data.pagination.lastPage,
+                        sort,order,search);
+                    emplPagination.render(paginationBlock);
+                }
+            });
         });
     </script>
 
