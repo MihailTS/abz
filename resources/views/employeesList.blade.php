@@ -24,6 +24,7 @@
     </div>
     <hr>
     <div class="employees__head row" >
+        <div class="employees__head-item col-md-1 col-sm-1"></div>
         <div data-sort="name" class="employees__head-item employees__head-item_clickable col-md-3 col-sm-3 @if($sortLinks['sort']=="name"){{($sortLinks['order']=="desc")?"employees__head-item_sort-desc":"employees__head-item_sort-asc"}}@endif">ФИО</div>
         <div data-sort="position" class="employees__head-item employees__head-item_clickable col-md-3 col-sm-3 @if($sortLinks['sort']=="position"){{($sortLinks['order']=="desc")?"employees__head-item_sort-desc":"employees__head-item_sort-asc"}}@endif">Должность</div>
         <div data-sort="employmentDate" class="employees__head-item employees__head-item_clickable col-md-2 col-sm-2 @if($sortLinks['sort']=="employmentDate"){{($sortLinks['order']=="desc")?"employees__head-item_sort-desc":"employees__head-item_sort-asc"}}@endif">Дата приема на работу</div>
@@ -32,10 +33,15 @@
     <div class="employees">
         @forelse($emplList as $empl)
         <div class="employee row">
-                <a href="{{route('employees.show',$empl->id)}}"><div class="employee__node-name col-md-3 col-sm-3">{{$empl->name}}</div></a>
-                <div class="employee__node-position col-md-3 col-sm-3">{{$empl->position}}</div>
-                <div class="employee__node-date number-data col-md-2 col-sm-2">{{$empl->employmentDate}}</div>
-                <div class="employee__node-salary number-data col-md-2 col-sm-2">{{$empl->salary}}</div>
+                <div class="employee__node-image col-md-1 col-sm-1">
+                    @if($empl->thumbnail)
+                        <img src="{{$empl->thumbnail}}" height="50px">
+                    @endif
+                </div>
+                <a href="{{route('employees.show',$empl->id)}}"><div class="employee__node-item employee__node-name col-md-3 col-sm-3">{{$empl->name}}</div></a>
+                <div class="employee__node-item employee__node-position col-md-3 col-sm-3">{{$empl->position}}</div>
+                <div class="employee__node-item employee__node-date number-data col-md-2 col-sm-2">{{$empl->employmentDate}}</div>
+                <div class="employee__node-item employee__node-salary number-data col-md-2 col-sm-2">{{$empl->salary}}</div>
         </div>
         @empty
                 <div>По данному запросу сотрудники не найдены</div>
@@ -136,11 +142,14 @@
             let employeesHtml="";
             if(typeof data.forEach === "function"){
                 data.forEach((i)=>{
-                    employeesHtml+="<div class='employee row'><a href='{{route('employees.index')}}/"+i.id+"'>" +
-                        "<div class='employee__node-name col-md-3 col-sm-3'>"+i.name+"</div></a>" +
-                        "<div class='employee__node-position col-md-3 col-sm-3'>"+i.position+"</div>" +
-                        "<div class='employee__node-date number-data col-md-2 col-sm-2'>"+i.employmentDate+"</div>" +
-                        "<div class='employee__node-salary number-data col-md-2 col-sm-2'>"+i.salary+"</div></div>";
+                    employeesHtml+="<div class='employee row'>" +
+                        "<div class='employee__node-image col-md-1 col-sm-1'>"+
+                        ((i.thumbnail)?"<img src='"+i.thumbnail+"' height='48px'>":"")+
+                        "</div><a href='{{route('employees.index')}}/"+i.id+"'>" +
+                        "<div class='employee__node-item employee__node-name col-md-3 col-sm-3'>"+i.name+"</div></a>" +
+                        "<div class='employee__node-item employee__node-position col-md-3 col-sm-3'>"+i.position+"</div>" +
+                        "<div class='employee__node-item employee__node-date number-data col-md-2 col-sm-2'>"+i.employmentDate+"</div>" +
+                        "<div class='employee__node-item employee__node-salary number-data col-md-2 col-sm-2'>"+i.salary+"</div></div>";
                 });
             }
             $(".employees").html(employeesHtml);

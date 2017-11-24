@@ -16,8 +16,15 @@
                     <a href="{{ route('employees.index') }}" class="btn btn-info pull-right">Назад</a>
                 </div>
                 <div class="panel-body">
-                    <form action="{{ route('employees.store') }}" method="POST" class="form-horizontal">
+                    <form enctype="multipart/form-data" action="{{ route('employees.store') }}" method="POST" class="form-horizontal">
                         {{ csrf_field() }}
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" >Фотография</label>
+                            <div class="col-sm-9">
+                                <input type="file" accept="image/jpg,image/jpeg,image/png" name="avatar" id="avatar" class="form-control">
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="control-label col-sm-3" >ФИО</label>
                             <div class="col-sm-9">

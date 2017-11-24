@@ -16,9 +16,21 @@
                     <a href="{{ route('employees.index') }}" class="btn btn-info pull-right">Назад</a>
                 </div>
                 <div class="panel-body">
-                    <form action="{{ route('employees.update', $employee->id) }}" method="POST" class="form-horizontal">
+                    <form enctype="multipart/form-data" action="{{ route('employees.update', $employee->id) }}" method="POST" class="form-horizontal">
                         {{ csrf_field() }}
                         {{ method_field('PATCH') }}
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" >Фотография</label>
+                            <div class="col-sm-9 edit-photo-block row">
+                                @if($employee->thumbnail)
+                                    <div class="row col-md-12 col-sm-12 edit-photo-thumb">
+                                        <img width="200px" src="{{$employee->thumbnail}}">
+                                        <div id="edit-photo-btn" class="btn btn-danger">Удалить изображение</div>
+                                    </div>
+                                @endif
+                                <input type="file" accept="image/jpg,image/jpeg,image/png" name="avatar" id="avatar" class="form-control">
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="control-label col-sm-3" >ФИО</label>
                             <div class="col-sm-9">
@@ -66,6 +78,7 @@
 @endsection
 @section("scripts")
     <script>
+
         let throttle =function (func, wait) {
             return function() {
                 let that = this,
@@ -105,6 +118,9 @@
         };
         $(function(){
             $("#head_id").keyup(throttle(function(){showHeadName($(this).val())}, 500 ));
+            $("#edit-photo-btn").click(function(){
+                $(".edit-photo-block").html('<input type="hidden" name="delete-avatar" value="y"><div class="form-control">Изображение удалено!</div>');
+            });
         });
     </script>
 @endsection

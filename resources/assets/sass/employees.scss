@@ -13,6 +13,13 @@
   border-bottom:1px solid #555555;
   margin-bottom:20px;
 }
+.employee__node-item{
+  line-height:50px;
+  max-height:50px;
+}
+.employee__node-image{
+  max-height:50px;
+}
 .number-data{
   font-family: "Inconsolata", "Fira Mono", "Source Code Pro", Monaco, Consolas, "Lucida Console", monospace;
 }
@@ -42,4 +49,10 @@
 }
 .head__error,.head__found{
   display:none;
+}
+.edit-photo-thumb{
+  margin-bottom:20px;
+}
+.edit-photo-block{
+  padding-left: 30px;
 }

@@ -33,7 +33,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Employee extends Model
 {
-    protected $fillable = ['name', 'employmentDate','salary','position','head_id'];
+    protected $fillable = ['name', 'employmentDate','salary','position','head_id','avatar','thumbnail'];
     public function isSupreme($empl){//возвращает true - если $empl является непосредственным или косвенным начальником
         $curHead=$empl;
         while($curHead=$curHead->head()->first()){
