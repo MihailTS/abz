@@ -8,7 +8,7 @@
         <div class="col-md-6">
             <div id="employees__search">
                 <form class="employees__search-form input-group col-md-12" method="get" action="">
-                    <input required type="text" name="q" class="employees__search-query form-control input-lg" placeholder="Поиск по сотрудикам" value="{{$searchQuery}}"/>
+                    <input required type="text" name="q" class="employees__search-query form-control input-lg" placeholder="Поиск по сотрудникам" value="{{$searchQuery}}"/>
                     <span class="input-group-btn">
                         <button class="btn btn-lg employees__search-button" type="submit">
                             <i class="glyphicon glyphicon-search"></i>

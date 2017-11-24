@@ -13,10 +13,9 @@ use \App\Employee;
 Route::get('/', 'EmployeeController@tree');
 Route::get('/employee/children/{id}', 'EmployeeController@getChildren')->where('id', '[0-9]+')->middleware('ajaxOnly');
 Route::get('/employee/change_head/{id}/{head}', 'EmployeeController@changeHead')->where('id', '[0-9]+')->middleware('ajaxOnly');
-Route::get('/employee/_headname/{id}', 'EmployeeController@getHeadNameByID')->where('id', '[0-9]+');//->middleware('ajaxOnly');
+Route::get('/employee/_headname/{id}', 'EmployeeController@getHeadNameByID')->where('id', '[0-9]+')->middleware('ajaxOnly');
 Route::get('/list/_sort', 'EmployeeController@getSortedAjax')->middleware('ajaxOnly');
 Route::get('/list/', 'EmployeeController@emplList');
-Route::get('/test/', 'EmployeeController@test');
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::middleware('auth')->group(function () {
